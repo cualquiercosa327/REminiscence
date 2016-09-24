@@ -1625,8 +1625,11 @@ bool Game::saveGameState(uint8_t slot) {
 	bool success = false;
 	char stateFile[20];
 	makeGameStateName(slot, stateFile);
+	char temp[128];
+	snprintf(temp, sizeof(temp), "%s", _savePath);	
+	
 	File f;
-	if (!f.open(stateFile, "zwb", _savePath)) {
+	if (!f.open(stateFile, "zwb", temp)) {
 		warning("Unable to save state file '%s'", stateFile);
 	} else {
 		// header
@@ -1652,8 +1655,10 @@ bool Game::loadGameState(uint8_t slot) {
 	bool success = false;
 	char stateFile[20];
 	makeGameStateName(slot, stateFile);
+	char temp[128];
+	snprintf(temp, sizeof(temp), "%s", _savePath);	
 	File f;
-	if (!f.open(stateFile, "zrb", _savePath)) {
+	if (!f.open(stateFile, "zrb", temp)) {
 		warning("Unable to open state file '%s'", stateFile);
 	} else {
 		uint32_t id = f.readUint32BE();
