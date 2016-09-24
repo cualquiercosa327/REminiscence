@@ -1,0 +1,8 @@
+*~
+*.o
+*.elf
+*.zip
+data/
+data
+.*
+!/.gitignore

@@ -1,0 +1,30 @@
+CC = nspire-gcc
+CFLAGS = -Ofast -fdata-sections -ffunction-sections -marm -march=armv5te -mtune=arm926ej-s
+SDL_CFLAGS = -I$(HOME)/Ndless/ndless-sdk/include/SDL
+SDL_LIBS = -lSDL -lz -Wl,--as-needed -Wl,--gc-sections -flto
+MODPLUG_LIBS =
+ZLIB_LIBS = 
+
+CXX := nspire-g++
+CXXFLAGS := -Wall -MMD $(SDL_CFLAGS) -DUSE_ZLIB
+
+SRCS = collision.cpp cutscene.cpp file.cpp fs.cpp game.cpp graphics.cpp main.cpp menu.cpp \
+	mixer.cpp mod_player.cpp ogg_player.cpp piege.cpp resource.cpp resource_aba.cpp \
+	scaler.cpp seq_player.cpp \
+	sfx_player.cpp staticres.cpp systemstub_sdl.cpp unpack.cpp util.cpp video.cpp
+
+OBJS = $(SRCS:.cpp=.o)
+DEPS = $(SRCS:.cpp=.d)
+
+LIBS = $(SDL_LIBS) $(MODPLUG_LIBS) $(TREMOR_LIBS) $(ZLIB_LIBS)
+
+rs: $(OBJS)
+	$(CXX) $(CFLAGS) $(LDFLAGS) -o $@ $(OBJS) $(LIBS)
+	genzehn --input rs --output rs.t --compress
+	make-prg rs.t rs.tns
+	rm rs.t rs
+	
+clean:
+	rm -f *.o *.d
+
+-include $(DEPS)
